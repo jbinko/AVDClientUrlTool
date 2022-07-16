@@ -1,2 +1,1 @@
-# AVDClientUrlTool
-Azure Virtual Desktop Client Connectivity Tool
+# Azure Virtual Desktop Client Connectivity Tool
