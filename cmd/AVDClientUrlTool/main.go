@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"sync"
 )
 
 type dnsRecord struct {
@@ -13,9 +14,18 @@ type dnsRecord struct {
 
 func checkDnsRecords(dnsRecords []dnsRecord) {
 
-	for _, dnsRecord := range dnsRecords {
-		checkDnsRecord(dnsRecord)
+	dnsRecordsCount := len(dnsRecords)
+	var wg sync.WaitGroup
+	wg.Add(dnsRecordsCount)
+
+	for i := 0; i < dnsRecordsCount; i++ {
+		go func(i int) {
+			defer wg.Done()
+			checkDnsRecord(dnsRecords[i])
+		}(i)
 	}
+
+	wg.Wait()
 }
 
 func checkDnsRecord(dnsRecord dnsRecord) {
@@ -25,9 +35,10 @@ func checkDnsRecord(dnsRecord dnsRecord) {
 		dnsRecord.error = err
 	} else {
 
-		ipsString := make([]string, len(ips))
+		ipsCount := len(ips)
+		ipsString := make([]string, ipsCount)
 
-		for i := 0; i < len(ips); i++ {
+		for i := 0; i < ipsCount; i++ {
 			ipsString[i] = ips[i].String()
 		}
 	}
