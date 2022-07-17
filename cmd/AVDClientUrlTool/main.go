@@ -68,13 +68,14 @@ func printDnsRecords(dnsRecords []dnsRecord, printFailed bool) {
 
 func main() {
 
-	// https://docs.microsoft.com/en-us/azure/virtual-desktop/safe-url-list?tabs=azure#remote-desktop-clients
 	dnsRecords := []dnsRecord{
+		// These URLs only correspond to client sites and resources
+		// https://docs.microsoft.com/en-us/azure/virtual-desktop/safe-url-list?tabs=azure#remote-desktop-clients
 		{
-			name: "client.wvd.microsoft.com",
+			name: "client.wvd.microsoft.com", // TODO - *.wvd.microsoft.com
 		},
 		{
-			name: "watchdog.servicebus.windows.net",
+			name: "watchdog.servicebus.windows.net", // TODO - *.servicebus.windows.net
 		},
 		{
 			name: "go.microsoft.com",
@@ -90,6 +91,87 @@ func main() {
 		},
 		{
 			name: "query.prod.cms.rt.microsoft.com",
+		},
+		// Azure Active Directory URLs can be found under IDs 56, 59 and 125
+		// https://docs.microsoft.com/en-us/microsoft-365/enterprise/urls-and-ip-address-ranges?view=o365-worldwide#microsoft-365-common-and-office-online
+		// Section 56
+		{
+			name: "credentials.auth.microsoft.com", // TODO - *.auth.microsoft.com
+		},
+		{
+			name: "msftidentity.com", // TODO - *.msftidentity.com
+		},
+		{
+			name: "msidentity.com", // TODO - *.msidentity.com
+		},
+		{
+			name: "account.activedirectory.windowsazure.com",
+		},
+		{
+			name: "accounts.accesscontrol.windows.net",
+		},
+		{
+			name: "adminwebservice.microsoftonline.com",
+		},
+		{
+			name: "api.passwordreset.microsoftonline.com",
+		},
+		{
+			name: "autologon.microsoftazuread-sso.com",
+		},
+		{
+			name: "becws.microsoftonline.com",
+		},
+		{
+			name: "ccs.login.microsoftonline.com",
+		},
+		{
+			name: "clientconfig.microsoftonline-p.net",
+		},
+		{
+			name: "companymanager.microsoftonline.com",
+		},
+		{
+			name: "device.login.microsoftonline.com",
+		},
+		{
+			name: "graph.microsoft.com",
+		},
+		{
+			name: "graph.windows.net",
+		},
+		{
+			name: "login.microsoft.com",
+		},
+		{
+			name: "login.microsoftonline.com",
+		},
+		{
+			name: "login.microsoftonline-p.com",
+		},
+		{
+			name: "login.windows.net",
+		},
+		{
+			name: "logincert.microsoftonline.com",
+		},
+		{
+			name: "loginex.microsoftonline.com",
+		},
+		{
+			name: "login-us.microsoftonline.com",
+		},
+		{
+			name: "nexus.microsoftonline-p.com",
+		},
+		{
+			name: "nexus.microsoftonline-p.com",
+		},
+		{
+			name: "passwordreset.microsoftonline.com",
+		},
+		{
+			name: "provisioningapi.microsoftonline.com",
 		},
 	}
 
@@ -108,3 +190,9 @@ func main() {
 	printDnsRecords(dnsRecords, false)
 	fmt.Println("\n")
 }
+
+// TODO
+// - Check socket port
+// - Resolve IPs - E.g. 2603:1006:2000::/48
+// - Section 59 and 125
+// - webassembly
