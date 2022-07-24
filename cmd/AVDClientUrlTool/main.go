@@ -96,15 +96,17 @@ func printUrlConnectRecords(urlRecords []urlRecord, printFailedOnly bool) {
 
 	for _, urlRecord := range urlRecords {
 
-		if printFailedOnly == true {
+		if urlRecord.dnsResolutionError == nil {
+			if printFailedOnly == true {
 
-			if urlRecord.urlConnectError != nil {
-				fmt.Printf("%s (%s)\n", urlRecord.urlConnect, urlRecord.urlConnectError)
-			}
-		} else {
+				if urlRecord.urlConnectError != nil {
+					fmt.Printf("%s (%s)\n", urlRecord.urlConnect, urlRecord.urlConnectError)
+				}
+			} else {
 
-			if urlRecord.urlConnectError == nil {
-				fmt.Printf("%s (%s)\n", urlRecord.urlConnect, urlRecord.urlConnectStatus)
+				if urlRecord.urlConnectError == nil {
+					fmt.Printf("%s (%s)\n", urlRecord.urlConnect, urlRecord.urlConnectStatus)
+				}
 			}
 		}
 	}
