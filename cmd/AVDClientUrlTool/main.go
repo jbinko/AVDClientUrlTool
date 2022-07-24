@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net"
+	"net/http"
 	"sync"
 )
 
@@ -11,6 +13,7 @@ type urlRecord struct {
 	dnsResolvedIPs     []string
 	dnsResolutionError error
 	urlConnect         string
+	urlConnectStatus   string
 	urlConnectError    error
 }
 
@@ -24,7 +27,7 @@ func checkDnsRecords(urlRecords []urlRecord) {
 		go func(i int) {
 			defer wg.Done()
 			err := checkDnsRecord(&urlRecords[i])
-			if err != nil {
+			if err == nil {
 				checkUrlConnectRecord(&urlRecords[i])
 			}
 		}(i)
@@ -55,8 +58,18 @@ func checkDnsRecord(urlRecord *urlRecord) error {
 
 func checkUrlConnectRecord(urlRecord *urlRecord) {
 
-	//urlConnect         string
-	//urlConnectError    error
+	resp, err := http.Get(urlRecord.urlConnect)
+	if err != nil {
+		urlRecord.urlConnectError = err
+	} else {
+		defer resp.Body.Close()
+		_, err := io.ReadAll(resp.Body)
+		if err != nil {
+			urlRecord.urlConnectError = err
+		} else {
+			urlRecord.urlConnectStatus = http.StatusText(resp.StatusCode)
+		}
+	}
 }
 
 func printDnsRecords(urlRecords []urlRecord, printFailedOnly bool) {
@@ -91,7 +104,7 @@ func printUrlConnectRecords(urlRecords []urlRecord, printFailedOnly bool) {
 		} else {
 
 			if urlRecord.urlConnectError == nil {
-				fmt.Printf("%s\n", urlRecord.urlConnect)
+				fmt.Printf("%s (%s)\n", urlRecord.urlConnect, urlRecord.urlConnectStatus)
 			}
 		}
 	}
