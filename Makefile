@@ -9,6 +9,9 @@ build:
 run:
 	go run ${SRC}/main.go
 
+fmt:
+	gofmt -w ${SRC}/main.go
+
 clean:
 	go clean
 	rm ${BINARY_NAME}-darwin-amd64.app

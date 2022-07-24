@@ -6,33 +6,33 @@ import (
 	"sync"
 )
 
-type dnsRecord struct {
-	name  string
-	ips   []string
-	error error
+type urlRecord struct {
+	dnsName            string
+	dnsResolvedIPs     []string
+	dnsResolutionError error
 }
 
-func checkDnsRecords(dnsRecords []dnsRecord) {
+func checkDnsRecords(urlRecords []urlRecord) {
 
-	dnsRecordsCount := len(dnsRecords)
+	urlRecordsCount := len(urlRecords)
 	var wg sync.WaitGroup
-	wg.Add(dnsRecordsCount)
+	wg.Add(urlRecordsCount)
 
-	for i := 0; i < dnsRecordsCount; i++ {
+	for i := 0; i < urlRecordsCount; i++ {
 		go func(i int) {
 			defer wg.Done()
-			checkDnsRecord(&dnsRecords[i])
+			checkDnsRecord(&urlRecords[i])
 		}(i)
 	}
 
 	wg.Wait()
 }
 
-func checkDnsRecord(dnsRecord *dnsRecord) {
+func checkDnsRecord(urlRecord *urlRecord) {
 
-	ips, err := net.LookupIP(dnsRecord.name)
+	ips, err := net.LookupIP(urlRecord.dnsName)
 	if err != nil {
-		dnsRecord.error = err
+		urlRecord.dnsResolutionError = err
 	} else {
 
 		ipsCount := len(ips)
@@ -42,24 +42,24 @@ func checkDnsRecord(dnsRecord *dnsRecord) {
 			ipsString[i] = ips[i].String()
 		}
 
-		dnsRecord.ips = ipsString
+		urlRecord.dnsResolvedIPs = ipsString
 	}
 }
 
-func printDnsRecords(dnsRecords []dnsRecord, printFailed bool) {
+func printDnsRecords(urlRecords []urlRecord, printFailedOnly bool) {
 
-	for _, dnsRecord := range dnsRecords {
+	for _, urlRecord := range urlRecords {
 
-		if printFailed == true {
+		if printFailedOnly == true {
 
-			if dnsRecord.error != nil {
-				fmt.Printf("%s (%s)\n", dnsRecord.name, dnsRecord.error)
+			if urlRecord.dnsResolutionError != nil {
+				fmt.Printf("%s (%s)\n", urlRecord.dnsName, urlRecord.dnsResolutionError)
 			}
 		} else {
 
-			if dnsRecord.error == nil {
-				for _, ip := range dnsRecord.ips {
-					fmt.Printf("%s (%s)\n", dnsRecord.name, ip)
+			if urlRecord.dnsResolutionError == nil {
+				for _, ip := range urlRecord.dnsResolvedIPs {
+					fmt.Printf("%s (%s)\n", urlRecord.dnsName, ip)
 				}
 			}
 		}
@@ -68,114 +68,114 @@ func printDnsRecords(dnsRecords []dnsRecord, printFailed bool) {
 
 func main() {
 
-	dnsRecords := []dnsRecord{
+	urlRecords := []urlRecord{
 		// These URLs only correspond to client sites and resources
 		// https://docs.microsoft.com/en-us/azure/virtual-desktop/safe-url-list?tabs=azure#remote-desktop-clients
 		{
-			name: "client.wvd.microsoft.com", // TODO - *.wvd.microsoft.com
+			dnsName: "client.wvd.microsoft.com", // TODO - *.wvd.microsoft.com
 		},
 		{
-			name: "watchdog.servicebus.windows.net", // TODO - *.servicebus.windows.net
+			dnsName: "watchdog.servicebus.windows.net", // TODO - *.servicebus.windows.net
 		},
 		{
-			name: "go.microsoft.com",
+			dnsName: "go.microsoft.com",
 		},
 		{
-			name: "aka.ms",
+			dnsName: "aka.ms",
 		},
 		{
-			name: "docs.microsoft.com",
+			dnsName: "docs.microsoft.com",
 		},
 		{
-			name: "privacy.microsoft.com",
+			dnsName: "privacy.microsoft.com",
 		},
 		{
-			name: "query.prod.cms.rt.microsoft.com",
+			dnsName: "query.prod.cms.rt.microsoft.com",
 		},
 		// Azure Active Directory URLs can be found under IDs 56, 59 and 125
 		// https://docs.microsoft.com/en-us/microsoft-365/enterprise/urls-and-ip-address-ranges?view=o365-worldwide#microsoft-365-common-and-office-online
 		// Section 56
 		{
-			name: "credentials.auth.microsoft.com", // TODO - *.auth.microsoft.com
+			dnsName: "credentials.auth.microsoft.com", // TODO - *.auth.microsoft.com
 		},
 		{
-			name: "msftidentity.com", // TODO - *.msftidentity.com
+			dnsName: "msftidentity.com", // TODO - *.msftidentity.com
 		},
 		{
-			name: "msidentity.com", // TODO - *.msidentity.com
+			dnsName: "msidentity.com", // TODO - *.msidentity.com
 		},
 		{
-			name: "account.activedirectory.windowsazure.com",
+			dnsName: "account.activedirectory.windowsazure.com",
 		},
 		{
-			name: "accounts.accesscontrol.windows.net",
+			dnsName: "accounts.accesscontrol.windows.net",
 		},
 		{
-			name: "adminwebservice.microsoftonline.com",
+			dnsName: "adminwebservice.microsoftonline.com",
 		},
 		{
-			name: "api.passwordreset.microsoftonline.com",
+			dnsName: "api.passwordreset.microsoftonline.com",
 		},
 		{
-			name: "autologon.microsoftazuread-sso.com",
+			dnsName: "autologon.microsoftazuread-sso.com",
 		},
 		{
-			name: "becws.microsoftonline.com",
+			dnsName: "becws.microsoftonline.com",
 		},
 		{
-			name: "ccs.login.microsoftonline.com",
+			dnsName: "ccs.login.microsoftonline.com",
 		},
 		{
-			name: "clientconfig.microsoftonline-p.net",
+			dnsName: "clientconfig.microsoftonline-p.net",
 		},
 		{
-			name: "companymanager.microsoftonline.com",
+			dnsName: "companymanager.microsoftonline.com",
 		},
 		{
-			name: "device.login.microsoftonline.com",
+			dnsName: "device.login.microsoftonline.com",
 		},
 		{
-			name: "graph.microsoft.com",
+			dnsName: "graph.microsoft.com",
 		},
 		{
-			name: "graph.windows.net",
+			dnsName: "graph.windows.net",
 		},
 		{
-			name: "login.microsoft.com",
+			dnsName: "login.microsoft.com",
 		},
 		{
-			name: "login.microsoftonline.com",
+			dnsName: "login.microsoftonline.com",
 		},
 		{
-			name: "login.microsoftonline-p.com",
+			dnsName: "login.microsoftonline-p.com",
 		},
 		{
-			name: "login.windows.net",
+			dnsName: "login.windows.net",
 		},
 		{
-			name: "logincert.microsoftonline.com",
+			dnsName: "logincert.microsoftonline.com",
 		},
 		{
-			name: "loginex.microsoftonline.com",
+			dnsName: "loginex.microsoftonline.com",
 		},
 		{
-			name: "login-us.microsoftonline.com",
+			dnsName: "login-us.microsoftonline.com",
 		},
 		{
-			name: "nexus.microsoftonline-p.com",
+			dnsName: "nexus.microsoftonline-p.com",
 		},
 		{
-			name: "nexus.microsoftonline-p.com",
+			dnsName: "nexus.microsoftonline-p.com",
 		},
 		{
-			name: "passwordreset.microsoftonline.com",
+			dnsName: "passwordreset.microsoftonline.com",
 		},
 		{
-			name: "provisioningapi.microsoftonline.com",
+			dnsName: "provisioningapi.microsoftonline.com",
 		},
 	}
 
-	checkDnsRecords(dnsRecords)
+	checkDnsRecords(urlRecords)
 
 	fmt.Println("\n")
 	fmt.Println("AVD Client Connectivity Check Tool")
@@ -183,11 +183,11 @@ func main() {
 	fmt.Println("\n")
 	fmt.Println("NOT Resolvable URLs:")
 	fmt.Println("======================================================")
-	printDnsRecords(dnsRecords, true)
+	printDnsRecords(urlRecords, true)
 	fmt.Println("\n")
 	fmt.Println("Resolvable URLs:")
 	fmt.Println("======================================================")
-	printDnsRecords(dnsRecords, false)
+	printDnsRecords(urlRecords, false)
 	fmt.Println("\n")
 }
 
@@ -195,4 +195,4 @@ func main() {
 // - Check socket port
 // - Resolve IPs - E.g. 2603:1006:2000::/48
 // - Section 59 and 125
-// - webassembly
+// - private/public shortpath
