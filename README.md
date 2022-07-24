@@ -7,9 +7,9 @@ This is NOT official Microsoft tool. This tool is based on publicly available do
 
 ## AVD client sites and resources
 
-|Requirement | Outbound Port | Probe DNS Record | Limited Test | Checked Port|
+|Requirement | Outbound Port | Probe DNS Record | Limited Test | Probe URL|
 |---|---|---|---|---|
-|*.wvd.microsoft.com|443|client.wvd.microsoft.com|Yes|  |
+|*.wvd.microsoft.com|443|client.wvd.microsoft.com|Yes|https://client.wvd.microsoft.com/arm/webclient/index.html|
 |*.servicebus.windows.net|443|watchdog.servicebus.windows.net|Yes|  |
 |go.microsoft.com|443|go.microsoft.com|  |  |
 |aka.ms|443|aka.ms|  |  |
@@ -19,7 +19,7 @@ This is NOT official Microsoft tool. This tool is based on publicly available do
 
 ## Office 365 URLs and IP address ranges - section 56
 
-|Requirement | Outbound Port | Probe DNS Record | Limited Test | Checked Port|
+|Requirement | Outbound Port | Probe DNS Record | Limited Test | Probe URL|
 |---|---|---|---|---|
 |*.auth.microsoft.com|443|credentials.auth.microsoft.com|Yes|  |
 |*.msftidentity.com|443|msftidentity.com|Yes|  |

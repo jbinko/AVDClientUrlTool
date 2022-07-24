@@ -10,6 +10,8 @@ type urlRecord struct {
 	dnsName            string
 	dnsResolvedIPs     []string
 	dnsResolutionError error
+	urlConnect         string
+	urlConnectError    error
 }
 
 func checkDnsRecords(urlRecords []urlRecord) {
@@ -21,14 +23,17 @@ func checkDnsRecords(urlRecords []urlRecord) {
 	for i := 0; i < urlRecordsCount; i++ {
 		go func(i int) {
 			defer wg.Done()
-			checkDnsRecord(&urlRecords[i])
+			err := checkDnsRecord(&urlRecords[i])
+			if err != nil {
+				checkUrlConnectRecord(&urlRecords[i])
+			}
 		}(i)
 	}
 
 	wg.Wait()
 }
 
-func checkDnsRecord(urlRecord *urlRecord) {
+func checkDnsRecord(urlRecord *urlRecord) error {
 
 	ips, err := net.LookupIP(urlRecord.dnsName)
 	if err != nil {
@@ -44,6 +49,14 @@ func checkDnsRecord(urlRecord *urlRecord) {
 
 		urlRecord.dnsResolvedIPs = ipsString
 	}
+
+	return urlRecord.dnsResolutionError
+}
+
+func checkUrlConnectRecord(urlRecord *urlRecord) {
+
+	//urlConnect         string
+	//urlConnectError    error
 }
 
 func printDnsRecords(urlRecords []urlRecord, printFailedOnly bool) {
@@ -66,13 +79,32 @@ func printDnsRecords(urlRecords []urlRecord, printFailedOnly bool) {
 	}
 }
 
+func printUrlConnectRecords(urlRecords []urlRecord, printFailedOnly bool) {
+
+	for _, urlRecord := range urlRecords {
+
+		if printFailedOnly == true {
+
+			if urlRecord.urlConnectError != nil {
+				fmt.Printf("%s (%s)\n", urlRecord.urlConnect, urlRecord.urlConnectError)
+			}
+		} else {
+
+			if urlRecord.urlConnectError == nil {
+				fmt.Printf("%s\n", urlRecord.urlConnect)
+			}
+		}
+	}
+}
+
 func main() {
 
 	urlRecords := []urlRecord{
 		// These URLs only correspond to client sites and resources
 		// https://docs.microsoft.com/en-us/azure/virtual-desktop/safe-url-list?tabs=azure#remote-desktop-clients
 		{
-			dnsName: "client.wvd.microsoft.com", // TODO - *.wvd.microsoft.com
+			dnsName:    "client.wvd.microsoft.com", // TODO - *.wvd.microsoft.com
+			urlConnect: "https://client.wvd.microsoft.com/arm/webclient/index.html",
 		},
 		{
 			dnsName: "watchdog.servicebus.windows.net", // TODO - *.servicebus.windows.net
@@ -188,6 +220,14 @@ func main() {
 	fmt.Println("Resolvable URLs:")
 	fmt.Println("======================================================")
 	printDnsRecords(urlRecords, false)
+	fmt.Println("\n")
+	fmt.Println("NOT Reachable URLs:")
+	fmt.Println("======================================================")
+	printUrlConnectRecords(urlRecords, true)
+	fmt.Println("\n")
+	fmt.Println("Reachable URLs:")
+	fmt.Println("======================================================")
+	printUrlConnectRecords(urlRecords, false)
 	fmt.Println("\n")
 }
 
