@@ -10,12 +10,12 @@ This is NOT official Microsoft tool. This tool is based on publicly available do
 |Requirement | Outbound Port | Probe DNS Record | Limited Test | Probe URL|
 |---|---|---|---|---|
 |*.wvd.microsoft.com|443|client.wvd.microsoft.com|Yes|https://client.wvd.microsoft.com/arm/webclient/index.html|
-|*.servicebus.windows.net|443|watchdog.servicebus.windows.net|Yes|  |
-|go.microsoft.com|443|go.microsoft.com|  |  |
-|aka.ms|443|aka.ms|  |  |
-|docs.microsoft.com|443|docs.microsoft.com|  |  |
-|privacy.microsoft.com|443|privacy.microsoft.com|  |  |
-|query.prod.cms.rt.microsoft.com|443|query.prod.cms.rt.microsoft.com|  |  |
+|*.servicebus.windows.net|443|watchdog.servicebus.windows.net|Yes|https://watchdog.servicebus.windows.net|
+|go.microsoft.com|443|go.microsoft.com|  |https://go.microsoft.com/fwlink/?linkid=246338|
+|aka.ms|443|aka.ms|  |https://aka.ms/browserpolicy|
+|docs.microsoft.com|443|docs.microsoft.com|  |https://docs.microsoft.com|
+|privacy.microsoft.com|443|privacy.microsoft.com|  |https://privacy.microsoft.com|
+|query.prod.cms.rt.microsoft.com|443|query.prod.cms.rt.microsoft.com|  |https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RE38YZj|
 
 ## Office 365 URLs and IP address ranges - section 56
 

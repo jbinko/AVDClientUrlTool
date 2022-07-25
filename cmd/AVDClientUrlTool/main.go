@@ -68,6 +68,7 @@ func checkUrlConnectRecord(urlRecord *urlRecord) {
 			urlRecord.urlConnectError = err
 		} else {
 			urlRecord.urlConnectStatus = http.StatusText(resp.StatusCode)
+			//fmt.Println("response Body:", string(body))
 		}
 	}
 }
@@ -123,21 +124,27 @@ func main() {
 		},
 		{
 			dnsName: "watchdog.servicebus.windows.net", // TODO - *.servicebus.windows.net
+			urlConnect: "https://watchdog.servicebus.windows.net",
 		},
 		{
 			dnsName: "go.microsoft.com",
+			urlConnect: "https://go.microsoft.com/fwlink/?linkid=246338",
 		},
 		{
 			dnsName: "aka.ms",
+			urlConnect: "https://aka.ms/browserpolicy",
 		},
 		{
 			dnsName: "docs.microsoft.com",
+			urlConnect: "https://docs.microsoft.com",
 		},
 		{
 			dnsName: "privacy.microsoft.com",
+			urlConnect: "https://privacy.microsoft.com",
 		},
 		{
 			dnsName: "query.prod.cms.rt.microsoft.com",
+			urlConnect: "https://query.prod.cms.rt.microsoft.com/cms/api/am/binary/RE38YZj",
 		},
 		// Azure Active Directory URLs can be found under IDs 56, 59 and 125
 		// https://docs.microsoft.com/en-us/microsoft-365/enterprise/urls-and-ip-address-ranges?view=o365-worldwide#microsoft-365-common-and-office-online
